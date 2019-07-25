@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0">
+	<title>Run Run Run</title>
+    <script src="js/phaser.min.js"></script>
+    <script src="js/Boot.js"></script>
+    <script src="js/Preloader.js"></script>
+    <script src="js/MainMenu.js"></script>
+    <script src="js/UI.js"></script>
+    <script src="js/MyLotto.js"></script>
+    <script src="js/Rank.js"></script>
+    <script src="js/Game.js"></script>
+    <script src="js/Result.js"></script>
+</head>
+<body>
+	<div id="game" style="height: 603px;"></div>
+  <script>
+    var game = new Phaser.Game(750, 1206, Phaser.CANVAS, 'game');
+    game.state.add('Boot', MyGame.Boot);
+    game.state.add('Preloader', MyGame.Preloader);
+    game.state.add('MainMenu', MyGame.MainMenu);
+    game.state.add('MyLotto', MyGame.MyLotto);
+    game.state.add('Rank', MyGame.Rank);
+    game.state.add('Game', MyGame.Game);
+    game.state.add('Result', MyGame.Result);
+    game.state.start('Boot');
+  </script>
+</body>
+	
+<body>
+<div id="game"></div>
+<div id="readme">
+<h2>Run Run Run</h2>
+<ul>
+<li><strong>High Concept:</strong>
+Avoiding the car accident and get the high score.
+</li>
+<li><strong>Theme:</strong>
+racing.
+</li>
+<li><strong>Mandated Variety:</strong>
+Just using the mouse control.
+</li>
+<li><strong>Player Experience Goals:</strong>
+I hope my players can feel exciting and interesting when they are playing my game.
+</li>
+<li><strong>Gameplay:</strong>
+This game is very easy, you just need to use your mouse to control motor to get high score and avoid car accident.
+</li>
+<li><strong>Prototype Goal:</strong>
+Racing.
+</li>
+<li><strong>Features:</strong>
+You can use the mouse control the mouse to any place in map.
+</li>
+<li><strong>Setting/Premise:</strong>
+Good luck
+</li>
+<li><strong>Story:</strong>
+No having fun
+</li>
+<li><strong>Target Audience:</strong>
+Someone who like motor racing.
+</li>
+<li><strong>Play Time:</strong>
+3-5 mins
+</li>
+<li><strong>Strategies:</strong>
+ I think the main way to play my game is saving more time possibility. Because the game only has five mins, the player need to finish the game (arriving the destination) before the time up. Mainly, some events would reduce your time. Therefore, the player needs to calculate how to use their limit time effectively
+</li>
+<li><strong>Prototype Assets:</strong>
+<ul>
+<li>Loading screen: self-made</li>
+<li>ending image: self-made</li>
+<li>Music: <a href="http://sc.chinaz.com/yinxiao/">Sound</a></li>
+<li><strong>Image, Map and Bouncing bottom image:</strong>
+ My friend, Viga-Wong,  design them.
+</li>
+</ul>
+</li>
+<li><strong>Iteration:</strong>
+Orginal Improvement to the game design: I change the core mechanic. Unlike the orginal game, the user can control the player to jump only twice per time. 
+	Rule: The score is based on the displacement but not stars.
+mprovements to the technical polish: I make a lot of changes in graphics. 
+	I also make a rank board.
+<ul>
+<li>The code for this example is adapted from the <a href="https://github.com/photonstorm/phaser/tree/v2.6.2/resources/Project%20Templates/Basic">Phaser Basic Project Template</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</body>
+</html>

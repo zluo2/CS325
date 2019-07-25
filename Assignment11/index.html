@@ -1,0 +1,254 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title>Digital Game 5</title>
+	<script src="js/phaser.min.js"></script>
+	<script src="js/main.js"></script>
+	<script src="js/TilemapLayer.findTilePath.js"></script>
+
+<style>
+body
+{
+    color: #777;
+    font-family: "Avenir", Verdana, sans-serif;
+}
+#readme
+{
+    margin-top: 10px;
+}
+</style>
+
+</head>
+
+<body>
+<center><div id="gamebox"></div></center>
+<script type="text/javascript">
+function Boot(game){
+	this.preload = function() {
+		game.load.spritesheet('loading', 'assets/loading.png', 80, 24);  
+	};
+	this.create = function() {
+		game.state.start('loading');
+	}
+}
+function Loading(game){
+	var loadingSprite;
+	this.preload = function() {
+		loadingSprite = game.add.sprite(280, 200, 'loading');
+		loadingSprite.animations.add('loadingplay', [0, 1, 2], 5, true);
+		loadingSprite.animations.play('loadingplay');
+
+		game.load.spritesheet('sheet-hero', 'assets/heros.png', 32, 32);  
+		game.load.spritesheet('sheet-monster', 'assets/monsters.png',32,32);
+
+		game.load.image('talkboximg', 'assets/talkbox.png');
+		
+		game.load.spritesheet('button-arrow', 'assets/button-arrow.png', 64, 64);  
+		game.load.spritesheet('button-x', 'assets/button-x.png', 64, 64);  
+		game.load.spritesheet('button-menu', 'assets/button-menu.png', 64, 64);  
+		game.load.spritesheet('button-a', 'assets/button-a.png', 96, 96);  
+		game.load.spritesheet('button-att', 'assets/attack.png', 64, 64);  
+		game.load.spritesheet('button-leave', 'assets/run.png', 64, 64);  
+		game.load.spritesheet('button-start', 'assets/button-start.png', 160, 93);  
+
+		game.load.image('tiles-2', 'assets/tiles-2.png');
+		game.load.image('world-ground', 'assets/world-background.bmp');
+		game.load.image('world-fore', 'assets/world-fore.png');
+		game.load.tilemap('world-1', 'assets/world-1.json', null, Phaser.Tilemap.TILED_JSON);
+
+		game.load.image('fightingback', 'assets/fightingback.png');
+		game.load.spritesheet('monster', 'assets/monsters.png',32,32);
+		game.load.spritesheet('fire', 'assets/fire.png',80,40);
+		game.load.spritesheet('fire2', 'assets/fire2.png',58,100);
+		game.load.audio('begin','assets/enter1.mp3');
+		game.load.audio('town','assets/background11.mp3');
+		game.load.audio('fighting','assets/fighting.mp3');
+		
+		game.load.spritesheet('floor','assets/floor.png');
+		game.load.spritesheet('house','assets/house.png');
+		game.load.image('house1','assets/house1.png');
+		game.load.tilemap('house11','assets/house1.json', null, Phaser.Tilemap.TILED_JSON);
+		game.load.image('sign','assets/sign.png');
+		
+		game.load.spritesheet('map11','assets/map1.png');
+		game.load.spritesheet('map22','assets/map2.png');
+		game.load.image('bossmap','assets/bossmap.png');
+		game.load.tilemap('bosshouse','assets/bosshouse1.json', null, Phaser.Tilemap.TILED_JSON);
+		game.load.image('boss','assets/Boss.png');
+		game.load.image('begin','assets/beginning1.jpg');
+		
+		game.load.audio('sword','assets/sword.mp3');
+	}
+	this.create=function () {
+		game.state.start('gamemenu');
+	};
+}
+function GameMenu(game){
+	this.create = function() {
+		
+		game.add.image(0,0,'begin');
+		var box = game.add.sprite(0,200,game.make.bitmapData(game.width, game.height));
+		box.addChild(game.add.text(150, -20, "You lost in a maze which is really dark",{fontSize:'20px',fill:'#fff'}));
+		box.addChild(game.add.text(100, 10, "Also, there are some monsters in the maze",{fontSize:'20px',fill:'#fff'}));
+		box.addChild(game.add.text(100, 40, "You need to find the weapon and ask all NPCs for help",{fontSize:'20px',fill:'#fff'}));
+		box.addChild(game.add.text(200, 70, "Kill the all monsters and boss",{fontSize:'20px',fill:'#fff'}));
+		box.addChild(game.add.text(150, 100, "You only have 5 mins - Good Luck",{fontSize:'20px',fill:'#fff'}));
+		box.alpha = 0;
+		game.add.tween(box).to({alpha:1,y:150},3000,"Linear",true);
+
+		var buttonClose = game.add.button(250, 350, 'button-start', null, this, 0, 1, 0, 1);
+		buttonClose.events.onInputDown.add(function(){game.state.start('gamemain');});
+	}
+}
+function GameWin(game){
+	this.create = function() {
+		var box = game.add.sprite(0, 200, game.make.bitmapData(game.width, game.height));
+		box.addChild(game.add.text(180, 0, "You Win！",{fontSize:'20px',fill:'#fff'}));
+		box.alpha = 0;
+		game.add.tween(box).to({alpha:1,y:120},3000,"Linear",true);
+
+		var buttonClose = game.add.button(285, 300, 'button-x', null, this, 0, 1, 0, 1);
+		buttonClose.events.onInputDown.add(function(){
+			game.state.start('gamemenu');
+			location.reload();
+		});
+	}
+}
+function GameOver(game){
+	this.create = function() {
+		
+		var box = game.add.sprite(0, 200, game.make.bitmapData(game.width, game.height));
+		box.addChild(game.add.text(180, 0, "What？Loser?……",{fontSize:'20px',fill:'#fff'}));
+		box.addChild(game.add.text(100, 30, "You can do it better in the next time……",{fontSize:'20px',fill:'#fff'}));
+		box.alpha = 0;
+		game.add.tween(box).to({alpha:1,y:150},3000,"Linear",true);
+
+		var buttonClose = game.add.button(285, 300, 'button-x', null, this, 0, 1, 0, 1);
+		buttonClose.events.onInputDown.add(function(){
+			game.state.start('gamemenu');
+			location.reload();
+		});
+	}
+}
+
+function GameOver2(game){
+	this.create = function() {
+		
+		var box = game.add.sprite(0, 200, game.make.bitmapData(game.width, game.height));
+		box.addChild(game.add.text(180, 0, "Time is up!!!……",{fontSize:'20px',fill:'#fff'}));
+		box.addChild(game.add.text(100, 30, "You can do it better in the next time……",{fontSize:'20px',fill:'#fff'}));
+		box.alpha = 0;
+		game.add.tween(box).to({alpha:1,y:150},3000,"Linear",true);
+
+		var buttonClose = game.add.button(285, 300, 'button-x', null, this, 0, 1, 0, 1);
+		buttonClose.events.onInputDown.add(function(){
+			game.state.start('gamemenu');
+			location.reload();
+		});
+	}
+}
+
+window.onload = function() {
+	var game = new Phaser.Game(640, 480, Phaser.CANVAS, 'gamebox');
+	game.state.add("boot",Boot);
+	game.state.add("loading",Loading);
+	game.state.add("gamemain",GameMain);
+	game.state.add("viewinfo",ViewInfo);
+	game.state.add("fighting",Fighting);
+	game.state.add("fighting2",Fighting2);
+	game.state.add("gamemenu",GameMenu);
+	game.state.add("gamewin",GameWin);
+	game.state.add("gameover",GameOver);
+	game.state.add("gameover2",GameOver2);
+
+	game.state.start('boot');
+};
+
+</script>
+</body>
+
+<body>
+<div id="game"></div>
+<div id="readme">
+<h2>Escape - Person who glows in the dark</h2>
+<ul>
+
+<li><strong>High Concept:</strong>
+The player needs to escape the maze in the time limit. The maze is in the dark
+environment. However, the character can glow in the dark. The player needs to control the
+characters to escape the labyrinth.
+</li>
+
+<li><strong>Theme:</strong>
+RPG - hero
+</li>
+
+<li><strong>Mandated Variety:</strong>
+Basic ↓ ↖↑↗ in the keyboard. Using space to talk with NPC.
+</li>
+
+<li><strong>Player Experience Goals:</strong>
+I hope my players can feel exciting and interesting when they are playing my game. The
+player also can practice their memory ability.
+</li>
+
+<li><strong>Gameplay:</strong>
+Talking with NPC, you can get some useful information. For example, you can realize that you need to 
+find the sign to get the weapon. Then, you can kill the two monsters and boss. By the way, you also will
+know you can walk across some special walls.
+</li>
+
+<li><strong>Prototype Goal:</strong>
+Physical machine_Phaser.
+</li>
+
+<li><strong>Features:</strong>
+You can kill the monsters, talk with NPC, get the new weapons.
+</li>
+
+<li><strong>Setting/Premise:</strong>
+The player needs to escape the maze.
+</li>
+
+<li><strong>Story:</strong>
+Escape	
+</li>
+
+<li><strong>Target Audience:</strong>
+people who like RPG
+</li>
+
+<li><strong>Play Time:</strong>
+5 mins
+</li>
+
+<li><strong>Strategies:</strong>
+First, you need to talk with NPC to get some useful information. 
+Then, you can go around to find the sign for the new weapons.
+Finally, you can kill the monsters and Boss to escape.
+</li>
+
+<li><strong>Prototype Assets:</strong>
+<ul>
+<li>Loading screen: self-made</li>
+<li>ending image: self-made</li>
+<li>Bouncing bottom image: <a href="https://www.google.com/search?q=number+bottom+png&oq=number+bottom+png&aqs=chrome..69i57.12562j0j7&sourceid=chrome&ie=UTF-8">number logo</a></li>
+<li>Map image: <a href="http://www.6m5m.com/shop_list-path-A2.html">Map</a></li>
+<li>Music: <a href="http://sc.chinaz.com/yinxiao/">Sound</a></li>
+<li>Map2 image: <a href="http://www.2gei.com/rpg-marker/">Map</a></li>
+<li>image: <a href="http://www.6m5m.com/service-sid-13946.html">Map</a></li>
+</ul>
+</li>
+
+<li><strong>Prototype Closest Other Game:</strong>
+Self-made
+<ul>
+<li>The code for this example is adapted from the <a href="https://github.com/photonstorm/phaser/tree/v2.6.2/resources/Project%20Templates/Basic">Phaser Basic Project Template</a></li>
+</ul>
+</li>
+
+</ul>
+</div>
+</body>
+</html>
